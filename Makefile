@@ -6,38 +6,44 @@
 #    By: mbueno <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/09 15:29:51 by mbueno            #+#    #+#              #
-#    Updated: 2023/03/14 14:37:51 by mbueno           ###   ########.fr        #
+#    Updated: 2023/03/16 11:50:17 by mbueno           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SSRC	=	server.c
-CSRC    =	client.c
+SERVERSRC	=	server.c
+CLIENTSRC    =	client.c
 
-SOBJS    =    $(SSRC:.c=.o)
-COBJS    =    $(CSRC:.c=.o)
+SERVEROBJS    =    $(SSRC:.c=.o)
+CLIENTOBJS    =    $(CSRC:.c=.o)
 
 CC        =    cc
-RM        =    rm -f
 CFLAGS    =    -Wall -Wextra -Werror
 
 SERVER = server
 CLIENT = client
 
 FTPRINTF = ft_printf/ft_printf.a
+FTPRINTF_PATH = ft_printf/
 
-all: $(SERVER) $(CLIENT)
+all: printf $(SERVER) $(CLIENT)
+
+printf:
+	make -C $(FTPRINTF_PATH) all
 
 $(SERVER):
-	$(CC) -o $(SERVER) $(CFLAGS) $(SSRC) $(FTPRINTF)
+	$(CC) -o $(SERVER) $(CFLAGS) $(SERVERSRC) $(FTPRINTF)
 
 $(CLIENT):
-	$(CC) -o $(CLIENT) $(CFLAGS) $(CSRC) $(FTPRINTF)
+	$(CC) -o $(CLIENT) $(CFLAGS) $(CLIENTSRC) $(FTPRINTF)
+
 
 clean:
-	@$(RM) $(SOBJS) $(COBJS)
+	rm -f $(SERVEROBJS) $(CLIENTOBJS)
+	make -C $(FTPRINTF_PATH) clean
 
 fclean: clean
-	@$(RM) $(SERVER) $(CLIENT)
+	rm -f $(SERVER) $(CLIENT)
+	make -C $(FTPRINTF_PATH) fclean
 
 re:	fclean all
 
